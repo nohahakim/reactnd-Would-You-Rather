@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { connect, useDispatch } from "react-redux";
 import { setAuthedUser } from "../actions/authedUser";
-import { Card, Button, Alert, Form, Image, Container } from "react-bootstrap";
+import { Card, Button, Alert, Form, Container } from "react-bootstrap";
 import { FaUserCircle } from "react-icons/fa";
 
 const Login = ({ users }) => {

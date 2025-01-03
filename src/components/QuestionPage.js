@@ -1,16 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
-import {
-  Card,
-  Row,
-  Col,
-  Image,
-  ProgressBar,
-  Badge,
-  Button,
-  Container,
-} from "react-bootstrap";
+import { Card, Row, Col, Image, Container } from "react-bootstrap";
 import AnsweredQuestion from "./AnsweredQuestion";
 import UnansweredQuestion from "./UnansweredQuestion";
 

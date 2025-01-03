@@ -1,7 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Container, Card, Row, Col, Image, Badge } from "react-bootstrap";
-import UserScore from "./UserScore";
 
 const Leaderboard = ({ users }) => {
   const sortedUsers = Object.values(users).sort(

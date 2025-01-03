@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { connect, useDispatch } from "react-redux";
 import { handleAddQuestion } from "../actions/questions";
-import { Card, Button, Form, Container, Alert } from "react-bootstrap";
+import { Card, Button, Form, Container } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import { FaPlusCircle } from "react-icons/fa";
 

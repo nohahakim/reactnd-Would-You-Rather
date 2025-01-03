@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { connect, useDispatch } from "react-redux";
+import { connect } from "react-redux";
 import { handleAddAnswer } from "../actions/questions";
 import { Button, Form, Alert } from "react-bootstrap";
 
