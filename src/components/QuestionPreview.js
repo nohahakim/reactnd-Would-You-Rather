@@ -1,72 +1,55 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
-import { Card, Button, Col } from 'react-bootstrap';
+import React from "react";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import { Card, Button, Row, Col, Image } from "react-bootstrap";
+import { FaArrowRight } from "react-icons/fa";
 
-
-
-const QuestionPreview = (props) => {
-  const { question, author, id } = props;
-  if (question === undefined) {
-    return <p>question not found</p>
-
+const QuestionPreview = ({ question, author, id }) => {
+  if (!question) {
+    return <p>Question not found.</p>;
   }
-
-
-  const { name, avatarURL } = author
-  const { optionOne } = question
 
   return (
-    <Card className='my-3'>
-      <Card.Header as='h4'> {name} asks: </Card.Header>
-
-
-      <Card.Body className='d-flex'>
-
-        <Col xs={10} md={3}>
-          <img
-            src={avatarURL}
-            alt={`Avatar of ${name}`}
-            width='150'
-            height='150'
-            className='rounded-circle'
-          />
-
-        </Col>
-
-        <Col xs={14} md={7}>
-
-
-          <h5 className='mb-3 text-captilize'>Would You Rather</h5>
-          <Card.Text>{optionOne.text.slice(0, 50)}...?</Card.Text>
-
-
-          <Link to={`/questions/${id}`}>
-            <Button variant="outline-dark">View Question</Button>
-          </Link>
-        </Col>
-
-
-
+    <Card className="mb-4 shadow-sm">
+      <Card.Header as="h5">{author.name} asks:</Card.Header>
+      <Card.Body>
+        <Row className="align-items-center">
+          <Col md={3} className="text-center">
+            <Image
+              src={author.avatarURL}
+              alt={`Avatar of ${author.name}`}
+              roundedCircle
+              fluid
+              style={{ maxHeight: "100px" }}
+            />
+          </Col>
+          <Col md={7}>
+            <Card.Title>Would You Rather...</Card.Title>
+            <Card.Text>
+              {question.optionOne.text.length > 50
+                ? `${question.optionOne.text.slice(0, 50)}...`
+                : question.optionOne.text}
+            </Card.Text>
+          </Col>
+          <Col md={2} className="text-end">
+            <Link to={`/questions/${id}`}>
+              <Button variant="primary" aria-label="View Question">
+                <FaArrowRight /> View
+              </Button>
+            </Link>
+          </Col>
+        </Row>
       </Card.Body>
-
     </Card>
-  )
-}
+  );
+};
 
-
-function mapStateToProps({ users, questions }, { id }) {
-  const question = questions ? questions[id] : null
+const mapStateToProps = ({ users, questions }, { id }) => {
+  const question = questions ? questions[id] : null;
   return {
-    question: question,
-    author: question ? users[question.author] : null
-  }
-}
+    question,
+    author: question ? users[question.author] : {},
+  };
+};
 
-export default connect(mapStateToProps)(QuestionPreview)
-
-
-
-
-
-
+export default connect(mapStateToProps)(QuestionPreview);

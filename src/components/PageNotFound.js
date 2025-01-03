@@ -1,17 +1,21 @@
-import React, { Fragment } from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
+import { Container, Button } from "react-bootstrap";
+import { FaExclamationTriangle, FaHome } from "react-icons/fa";
 
 const PageNotFound = () => {
-	return (
-		<Fragment>
-			<div className="error-block">
-				<h1 className="display3 text-center">404 ERROR</h1>
-				<h1 className="display4 text-center">
-					<Link to="/">Return to the Home Page</Link>
-				</h1>
-			</div>
-		</Fragment>
-	);
-}
+  return (
+    <Container className="text-center my-5">
+      <FaExclamationTriangle size={80} className="text-warning mb-4" />
+      <h1 className="display-4">404 - Page Not Found</h1>
+      <p className="lead">Oops! The page you're looking for doesn't exist.</p>
+      <Link to="/">
+        <Button variant="primary" size="lg">
+          <FaHome className="me-2" /> Return Home
+        </Button>
+      </Link>
+    </Container>
+  );
+};
 
 export default PageNotFound;

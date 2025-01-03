@@ -1,73 +1,70 @@
-import React, { useState } from 'react'
-import { connect } from 'react-redux';
-import { handleAddAnswer } from '../actions/questions'
-import { Button } from 'react-bootstrap'
+import React, { useState } from "react";
+import { connect, useDispatch } from "react-redux";
+import { handleAddAnswer } from "../actions/questions";
+import { Button, Form, Alert } from "react-bootstrap";
 
-const UnansweredQuestion = (props) => {
-  const { question, authedUser, dispatch } = props;
-  const { optionOne, optionTwo, id } = question
-  const [optionSelected, setOptionSelected] = useState('');
+const UnansweredQuestion = ({ question, authedUser, dispatch }) => {
+  const { optionOne, optionTwo, id } = question;
+  const [selectedOption, setSelectedOption] = useState("");
+  const [validated, setValidated] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (selectedOption) {
+      dispatch(
+        handleAddAnswer({
+          authedUser,
+          qid: id,
+          answer: selectedOption,
+        })
+      );
+    } else {
+      setValidated(true);
+    }
+  };
+
   return (
-    <div className='col-7'>
-      <h5 className='mb-3 text-capitalize'> Would you rather </h5>
-
-
-      <form>
-        <div className='form-check'>
-          <label className='form-check-label my-2'>
-            <input
-              type='radio'
-              className='form-check-input'
-              name='answer'
-              value='optionOne'
-
-              onChange={e => setOptionSelected(e.target.value)}
-            />
-            {optionOne.text}
-          </label>
-        </div>
-
-        <div className='form-check'>
-          <label className='form-check-label my-2'>
-            <input
-              type='radio'
-              className='form-check-input'
-              name='answer'
-
-              value='optionTwo'
-
-              onChange={e => setOptionSelected(e.target.value)}
-
-            />
-            {optionTwo.text}
-          </label>
-
-        </div>
-
+    <div className="p-3">
+      <h5 className="mb-4">Would you rather...</h5>
+      <Form noValidate validated={validated} onSubmit={handleSubmit}>
+        <Form.Group className="mb-3" controlId="optionOne">
+          <Form.Check
+            type="radio"
+            label={optionOne.text}
+            name="options"
+            value="optionOne"
+            onChange={(e) => setSelectedOption(e.target.value)}
+            required
+          />
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="optionTwo">
+          <Form.Check
+            type="radio"
+            label={optionTwo.text}
+            name="options"
+            value="optionTwo"
+            onChange={(e) => setSelectedOption(e.target.value)}
+            required
+          />
+        </Form.Group>
+        {validated && !selectedOption && (
+          <Alert variant="danger">Please select an option to submit.</Alert>
+        )}
         <Button
-          type='submit'
-          className='btn btn-primary form-control mt-3'
-          disabled={optionSelected === ''}
-          onClick={(e) => {
-            e.preventDefault()
-            dispatch(handleAddAnswer({
-              authedUser,
-              qid: id,
-              answer: optionSelected
-            }))
-          }}
-        > Submit </Button>
-      </form>
-
-
+          variant="primary"
+          type="submit"
+          disabled={!selectedOption}
+          className="w-100"
+        >
+          Submit Answer
+        </Button>
+      </Form>
     </div>
-  )
-}
+  );
+};
 
-function mapStateToProps({ authedUser }) {
-  return {
-    authedUser
-  }
-}
+const mapStateToProps = ({ authedUser }) => ({
+  authedUser,
+});
 
-export default connect(mapStateToProps)(UnansweredQuestion)
+export default connect(mapStateToProps)(UnansweredQuestion);

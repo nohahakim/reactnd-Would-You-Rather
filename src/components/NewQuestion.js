@@ -1,75 +1,85 @@
-import React, { useState } from 'react'
-import { connect, useDispatch } from 'react-redux'
-import { handleAddQuestion } from '../actions/questions'
-import { Card, Button } from 'react-bootstrap'
+import React, { useState } from "react";
+import { connect, useDispatch } from "react-redux";
+import { handleAddQuestion } from "../actions/questions";
+import { Card, Button, Form, Container, Alert } from "react-bootstrap";
+import { useHistory } from "react-router-dom";
+import { FaPlusCircle } from "react-icons/fa";
 
+const NewQuestion = ({ authedUser }) => {
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const [optionOneText, setOptionOneText] = useState("");
+  const [optionTwoText, setOptionTwoText] = useState("");
+  const [validated, setValidated] = useState(false);
 
-const NewQuestion = (props) => {
-  const { authedUser, history } = props;
-  const dispatch = useDispatch()
-  const [optionOneText, setOptionOneText] = useState('')
-  const [optionTwoText, setOptionTwoText] = useState('')
-  const author = authedUser
-
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (optionOneText && optionTwoText) {
+      dispatch(
+        handleAddQuestion({
+          optionOneText,
+          optionTwoText,
+          author: authedUser,
+        })
+      ).then(() => history.push("/"));
+    } else {
+      setValidated(true);
+    }
+  };
 
   return (
-    <div className='row'>
-      <div className='col-6 mx-auto my-5'>
-        <Card className="text-center">
-          <Card.Header>
-            <Card.Title>Create New Question</Card.Title>
-          </Card.Header>
-
-          <Card.Body>
-
-            <h2 className="mb-4"> Would you rather ...</h2>
-
-            <form >
-              <input
-                type='text'
-                className='form-control'
-                placeholder='Enter Option One Here'
-                id='optionOne'
+    <Container className="d-flex justify-content-center my-5">
+      <Card className="shadow-lg" style={{ width: "35rem" }}>
+        <Card.Body>
+          <Card.Title className="text-center mb-4">
+            <FaPlusCircle className="me-2 text-primary" />
+            Create New Question
+          </Card.Title>
+          <Card.Text className="text-center mb-4">
+            Would You Rather...
+          </Card.Text>
+          <Form noValidate validated={validated} onSubmit={handleSubmit}>
+            <Form.Group className="mb-3" controlId="optionOne">
+              <Form.Control
+                type="text"
+                placeholder="Enter Option One"
                 value={optionOneText}
-                onChange={e => setOptionOneText(e.target.value)}
+                onChange={(e) => setOptionOneText(e.target.value)}
+                required
               />
-
-              <h3>
-                <small>OR</small>
-              </h3>
-              <input
-                type='text'
-                className='form-control'
-                placeholder='Enter Option Two Here'
-                id='optionTwo'
+              <Form.Control.Feedback type="invalid">
+                Please provide an option.
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="optionTwo">
+              <Form.Control
+                type="text"
+                placeholder="Enter Option Two"
                 value={optionTwoText}
-                onChange={e => setOptionTwoText(e.target.value)}
+                onChange={(e) => setOptionTwoText(e.target.value)}
+                required
               />
+              <Form.Control.Feedback type="invalid">
+                Please provide an option.
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Button
+              variant="success"
+              type="submit"
+              disabled={!optionOneText || !optionTwoText}
+              className="w-100"
+            >
+              Submit Question
+            </Button>
+          </Form>
+        </Card.Body>
+      </Card>
+    </Container>
+  );
+};
 
-              <Button
-                type='submit'
-                className='btn btn-primary form-control mt-3'
-                disabled={optionOneText === '' || optionTwoText === ''}
-                onClick={(e) => {
-                  e.preventDefault()
-                  dispatch(handleAddQuestion({ optionOneText, optionTwoText, author }))
-                    .then(history.push('/'))
-                }}
-              > Submit </Button>
-            </form>
-          </Card.Body>
-        </Card>
-      </div>
-    </div>
-  )
+const mapStateToProps = ({ authedUser }) => ({
+  authedUser,
+});
 
-}
-
-function mapStateToProps({ authedUser }) {
-  return {
-    authedUser
-  }
-}
-
-export default connect(mapStateToProps)(NewQuestion)
-
+export default connect(mapStateToProps)(NewQuestion);

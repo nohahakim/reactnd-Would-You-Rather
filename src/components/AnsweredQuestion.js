@@ -1,67 +1,80 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { ProgressBar } from 'react-bootstrap'
-import { FaCheck } from 'react-icons/fa'
+import React from "react";
+import { connect } from "react-redux";
+import { ProgressBar, Badge } from "react-bootstrap";
+import { FaCheck } from "react-icons/fa";
 
-const AnsweredQuestion = (props) => {
-  const { question, authedUser } = props;
-
-  const { optionOne, optionTwo } = question
+const AnsweredQuestion = ({ question, authedUser }) => {
+  const { optionOne, optionTwo } = question;
 
   const totalVotes = optionOne.votes.length + optionTwo.votes.length;
-  const optionOnePercent = Math.round((optionOne.votes.length / totalVotes) * 100);
-  const optionTwoPercent = Math.round((optionTwo.votes.length / totalVotes) * 100);
+  const optionOnePercent = Math.round(
+    (optionOne.votes.length / totalVotes) * 100
+  );
+  const optionTwoPercent = Math.round(
+    (optionTwo.votes.length / totalVotes) * 100
+  );
+
+  const userChoice = optionOne.votes.includes(authedUser)
+    ? "optionOne"
+    : "optionTwo";
 
   return (
-    <div className='col-7'>
-      <h5> Results: </h5>
+    <div className="p-3">
+      <h5 className="mb-4">Results:</h5>
 
-      <div className={
-        'position-relative rounded-lg border py-2 px-3 mt-3'}>
-        <div className='my-3'> Would you rather {optionOne.text}? </div>
-        {optionOne.votes.includes(authedUser) ? (
-          <span className="text-danger ml-2">
-            <FaCheck className='answered' />
-            Your choice
-          </span>
-        ) : null}
-
+      <div
+        className={`border rounded p-3 mb-4 ${
+          userChoice === "optionOne" ? "bg-light" : ""
+        }`}
+      >
+        <div className="d-flex justify-content-between align-items-center">
+          <span>Would you rather {optionOne.text}?</span>
+          {userChoice === "optionOne" && (
+            <Badge bg="success">
+              <FaCheck className="me-1" /> Your Choice
+            </Badge>
+          )}
+        </div>
         <ProgressBar
           now={optionOnePercent}
           label={`${optionOnePercent}%`}
-          className='rounded-pill my-2'
+          variant={userChoice === "optionOne" ? "success" : "primary"}
+          className="my-2"
         />
-
-        <div className='text-center p-1'>
-          {optionOne.votes.length} out {totalVotes} votes
+        <div className="text-muted">
+          {optionOne.votes.length} out of {totalVotes} votes
         </div>
+      </div>
 
-        <div className='my-3'> Would you rather {optionTwo.text}? </div>
-        {optionTwo.votes.includes(authedUser) ? (
-          <span className="text-danger ml-2">
-            <FaCheck className='answered' />
-            Your choice
-          </span>
-        ) : null}
-
+      <div
+        className={`border rounded p-3 ${
+          userChoice === "optionTwo" ? "bg-light" : ""
+        }`}
+      >
+        <div className="d-flex justify-content-between align-items-center">
+          <span>Would you rather {optionTwo.text}?</span>
+          {userChoice === "optionTwo" && (
+            <Badge bg="success">
+              <FaCheck className="me-1" /> Your Choice
+            </Badge>
+          )}
+        </div>
         <ProgressBar
           now={optionTwoPercent}
           label={`${optionTwoPercent}%`}
-          className='rounded-pill my-2'
+          variant={userChoice === "optionTwo" ? "success" : "primary"}
+          className="my-2"
         />
-
-        <div className='text-center p-1'>
-          {optionTwo.votes.length} out {totalVotes} votes
+        <div className="text-muted">
+          {optionTwo.votes.length} out of {totalVotes} votes
         </div>
       </div>
     </div>
-  )
+  );
+};
 
-}
-function mapStateToProps({ authedUser }) {
-  return {
-    authedUser
-  }
-}
+const mapStateToProps = ({ authedUser }) => ({
+  authedUser,
+});
 
-export default connect(mapStateToProps)(AnsweredQuestion)
+export default connect(mapStateToProps)(AnsweredQuestion);

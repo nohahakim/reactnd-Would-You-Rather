@@ -1,63 +1,69 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
-import { Card } from 'react-bootstrap'
+import React from "react";
+import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
+import {
+  Card,
+  Row,
+  Col,
+  Image,
+  ProgressBar,
+  Badge,
+  Button,
+  Container,
+} from "react-bootstrap";
+import AnsweredQuestion from "./AnsweredQuestion";
+import UnansweredQuestion from "./UnansweredQuestion";
 
-import AnsweredQuestion from './AnsweredQuestion';
-import UnansweredQuestion from './UnansweredQuestion';
-
-const QuestionPage = (props) => {
-  const { question, author, answered } = props;
-
-  if (question === undefined) {
-    return <Redirect to='/404' />
+const QuestionPage = ({ question, author, answered }) => {
+  if (!question) {
+    return <Redirect to="/404" />;
   }
+
   return (
-    <div className='row'>
-      <div className='col-6 mx-auto my-5'>
-        <Card>
-          <Card.Header as='h4'> {author.name} asks: </Card.Header>
-          <Card.Body className='d-flex'>
-            <div className='col-5 text-center border-right'>
-              <img
+    <Container className="my-5">
+      <Card className="shadow">
+        <Card.Header as="h4" className="bg-primary text-white">
+          {author.name} asks:
+        </Card.Header>
+        <Card.Body>
+          <Row>
+            <Col md={3} className="text-center">
+              <Image
                 src={author.avatarURL}
                 alt={`Avatar of ${author.name}`}
-                height='150'
-                width='150'
-                className='rounded-circle'
+                roundedCircle
+                fluid
+                style={{ maxHeight: "150px" }}
               />
-            </div>
-            {answered
-              ? <AnsweredQuestion question={question} />
-              : <UnansweredQuestion question={question} />
-            }
-          </Card.Body>
-        </Card>
-      </div>
-    </div>
-  )
-}
+            </Col>
+            <Col md={9}>
+              {answered ? (
+                <AnsweredQuestion question={question} />
+              ) : (
+                <UnansweredQuestion question={question} />
+              )}
+            </Col>
+          </Row>
+        </Card.Body>
+      </Card>
+    </Container>
+  );
+};
 
-
-
-
-
-
-function mapStateToProps({ authedUser, users, questions }, props) {
-  const { id } = props.match.params
+const mapStateToProps = ({ authedUser, users, questions }, props) => {
+  const { id } = props.match.params;
   const question = questions ? questions[id] : null;
   const author = question ? users[question.author] : null;
   const answered = question
-    ? question.optionOne.votes.includes(authedUser) || question.optionTwo.votes.includes(authedUser)
+    ? question.optionOne.votes.includes(authedUser) ||
+      question.optionTwo.votes.includes(authedUser)
     : false;
 
   return {
     question,
     author,
-    answered
-
+    answered,
   };
-}
+};
 
-export default connect(mapStateToProps)(QuestionPage)
-
+export default connect(mapStateToProps)(QuestionPage);
