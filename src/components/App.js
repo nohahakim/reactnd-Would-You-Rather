@@ -1,7 +1,8 @@
+// src/components/App.js
 import React, { useEffect, Fragment } from "react";
 import { connect, useDispatch } from "react-redux";
 import { handleInitialData } from "../actions/shared";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { HashRouter, Route, Switch } from "react-router-dom"; // Changed to HashRouter
 import LoadingBar from "react-redux-loading";
 import NewQuestion from "./NewQuestion";
 import Login from "./Login";
@@ -19,7 +20,9 @@ const App = ({ authedUser }) => {
   }, [dispatch]);
 
   return (
-    <BrowserRouter>
+    <HashRouter>
+      {" "}
+      {/* Changed from BrowserRouter to HashRouter */}
       <Fragment>
         <LoadingBar style={{ backgroundColor: "#28a745", height: "4px" }} />
         <NavBar />
@@ -38,7 +41,7 @@ const App = ({ authedUser }) => {
           )}
         </div>
       </Fragment>
-    </BrowserRouter>
+    </HashRouter>
   );
 };
 
